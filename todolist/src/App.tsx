@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import { TodoList } from './TodoList';
 import { AddTodoForm } from './AddTodoForm';
@@ -35,10 +36,23 @@ function App() {
 	}
 
 	return (
-	<>
-		<TodoList todos={todos} toggleTodo={toggleTodo} />
-		<AddTodoForm addTodo={addTodo} />
-	</>
+		<div className="container">
+			<div className="page-content page-container" id="page-content">
+				<div className="padding">
+					<div className="row container d-flex justify-content-center">
+						<div className="col-md-12">
+							<div className="card px-3">
+								<div className="card-body">
+									<h4 className="card-title">Awesome Todo list</h4>
+									<TodoList todos={todos} toggleTodo={toggleTodo} />
+									<AddTodoForm addTodo={addTodo} />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	);
 }
 

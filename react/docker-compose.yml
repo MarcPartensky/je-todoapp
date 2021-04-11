@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  react:
+    image: marcpartensky/je-todoapp-react
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      # - HOST=0.0.0.0
+      - PORT=8000
+      - SPRING_API_URL=http://marcpartensky.com:8080 # not suitable for production
+    ports:
+      - "8000:8000"

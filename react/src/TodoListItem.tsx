@@ -17,17 +17,17 @@ export const TodoListItem: React.FC<Props> = ({ todo, toggleTodo }) => {
 				<label
 					className="form-check-label"
 					style= {{
-					textDecoration: todo.complete ?
+					textDecoration: todo.done ?
 						'line-through' : undefined
 					}}>
 				<input
 					type="checkbox"
-					checked={todo.complete}
+					checked={todo.done}
 					onClick={() => {
 						toggleTodo(todo);
 					}}
 					/> {' '}
-					{todo.text}
+					{todo.content}
 				</label>
 			</div>
 		</li>

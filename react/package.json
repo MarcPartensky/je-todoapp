@@ -41,5 +41,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+	"proxy": "http://marcpartensky.com:8001"
 }

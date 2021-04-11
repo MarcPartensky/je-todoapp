@@ -3,26 +3,34 @@ import { useState } from 'react';
 import { TodoList } from './TodoList';
 import { AddTodoForm } from './AddTodoForm';
 
-const initialTodos: Todo[] = [
-	{
-		text: 'Walk the dog',
-		complete: false,
-	},
-	{
-		text: 'Write app',
-		complete: true,
-	}
-];
+const url = process.env.SPRING_API_URL || "marcpartensky.com:8080";
+
+const initialTodos: Todo[] = [];
+fetch(url)
+	.then((response) => response.json())
+	.then((data) => {
+		initialTodos.push(...data);
+});
+
+// import 'express';
+// var app = express();
+
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
+// });
 
 function App() {
 	const [todos, setTodos] = useState(initialTodos);
+
 
 	const toggleTodo = (selectedTodo: Todo) => {
 		const newTodos = todos.map(todo => {
 			if (todo === selectedTodo) {
 				return {
 					...todo,
-					complete: !todo.complete,
+					done: !todo.done,
 				};
 			}
 			return todo;
@@ -30,8 +38,8 @@ function App() {
 		setTodos(newTodos);
 	};
 
-	const addTodo: AddTodo = (text: string) => {
-		const newTodo = { text, complete: false };
+	const addTodo: AddTodo = (content: string) => {
+		const newTodo = { content, done: false };
 		setTodos([...todos, newTodo]);
 	}
 

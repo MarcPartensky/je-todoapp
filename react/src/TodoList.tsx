@@ -11,7 +11,7 @@ export const TodoList: React.FC<Props> = ({ todos, toggleTodo }) => {
 			<ul className="d-flex flex-column-reverse todo-list">
 				{todos.map(todo => (
 					<TodoListItem
-						key={todo.text}
+						key={todo.content}
 						todo={todo}
 						toggleTodo={toggleTodo}
 					/>

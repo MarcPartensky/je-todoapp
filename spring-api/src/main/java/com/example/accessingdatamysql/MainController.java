@@ -14,7 +14,7 @@ public class MainController {
 	// Create
   @PostMapping(path="/create")
 	@ResponseBody
-  public String create (
+  public int create (
 		@RequestParam String content,
 		@RequestParam Boolean done
 		) {
@@ -22,7 +22,7 @@ public class MainController {
 		todo.content = content;
 		todo.done = done;
     todoRepository.save(todo);
-    return "Created";
+    return todo.id;
   }
 
 	// Read

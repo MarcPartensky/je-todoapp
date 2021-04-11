@@ -51,7 +51,19 @@ function App() {
 			}
 			return todo;
 		});
-		setTodos(newTodos);
+
+    const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(selectedTodo)
+    };
+
+    fetch(url + `/todo/${selectedTodo.id}`, requestOptions)
+        .then(response => response.json())
+				.then(function (data: Todo[]) {
+					console.log(data);
+					setTodos(newTodos);
+				}.bind(todos));
 	};
 
 	const addTodo: AddTodo = (content: string) => {
@@ -64,7 +76,7 @@ function App() {
 				body: JSON.stringify(newTodo)
     };
 
-    fetch(url + "/todo/add", requestOptions)
+    fetch(url + "/todo/create", requestOptions)
         .then(response => response.json())
 				.then(function (data: Todo[]) {
 					console.log(data);

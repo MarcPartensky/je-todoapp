@@ -1,4 +1,5 @@
 interface Todo {
+	id: int;
 	content: string;
 	done: boolean;
 }

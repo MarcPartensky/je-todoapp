@@ -1,0 +1,40 @@
+version: "3.9"
+
+networks:
+  spring-api:
+
+services:
+
+  spring-api:
+    image: marcpartensky/je-todoapp-spring-api
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./secrets/spring-api.env
+    networks:
+      - spring-api
+
+  db: # would be better
+    image: postgres
+    restart: unless-stopped
+    # ports:
+    #   - "5432:5432"
+    volumes:
+      - ./volumes/postgres/dump:/srv/postgresql/dump
+    env_file:
+      - ./secrets/postgres.env
+    networks:
+      - spring-api
+
+  # db:
+  #   image: mysql
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - ./volumes/mysql/dump:/srv/mysql/dump
+  #   env_file:
+  #     - mysql.env

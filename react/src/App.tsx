@@ -1,10 +1,17 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import './bootstrap.min.css';
+// import './font-awesome.css';
+import './index.css';
+
 import { useState, useEffect } from 'react';
 import { TodoList } from './TodoList';
 import { AddTodoForm } from './AddTodoForm';
-
-
 import url from './config';
+
+// const header = new Headers();
+// header.append('Access-Control-Allow-Origin', '*');
+// header.append('Referrer-Policy', 'origin');
+// Referrer Policy: strict-origin-when-cross-origin
+
 
 // import 'express';
 // var app = express();
@@ -29,11 +36,12 @@ const initialTodos: Todo[] = [];
 
 function App() {
 	const [todos, setTodos] = useState(initialTodos);
+
 	useEffect(() => {
 		fetch(url + "/todo/all")
 			.then((response) => response.json())
 			.then((data) => {
-				setTodos([...todos, ...data]);
+				setTodos(todos => [...todos, ...data]);
 				// initialTodos.concat(data);
 				// initialTodos.push(...data);
 				// console.log(initialTodos);
@@ -41,7 +49,16 @@ function App() {
 	}, []);
 
 
-	const toggleTodo = (selectedTodo: Todo) => {
+	const toggleTodo: ToggleTodo = (selectedTodo: Todo) => {
+
+    const requestOptions = {
+        method: 'PUT',
+        headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: `content=${selectedTodo.content}&done=${!selectedTodo.done}`
+    };
+
 		const newTodos = todos.map(todo => {
 			if (todo === selectedTodo) {
 				return {
@@ -52,38 +69,51 @@ function App() {
 			return todo;
 		});
 
-    const requestOptions = {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(selectedTodo)
-    };
-
     fetch(url + `/todo/${selectedTodo.id}`, requestOptions)
-        .then(response => response.json())
-				.then(function (data: Todo[]) {
-					console.log(data);
-					setTodos(newTodos);
-				}.bind(todos));
+        .then(response => console.log(response));
+
+		setTodos(newTodos);
 	};
 
 	const addTodo: AddTodo = (content: string) => {
 		const newTodo = { content: content, done: false };
-		console.log(newTodo);
 
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(newTodo)
+        headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: `content=${content}&done=0`
     };
 
     fetch(url + "/todo/create", requestOptions)
         .then(response => response.json())
-				.then(function (data: Todo[]) {
-					console.log(data);
-					setTodos([...todos, newTodo]);
-				}.bind(todos));
+				.then(function (id: Number) {
+					console.log(id);
+					setTodos([...todos, {id, ...newTodo}]);
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+				});
 
 	}
+
+	const deleteTodo: DeleteTodo = (selectedTodo: Todo) => {
+
+    const requestOptions = {
+        method: 'DELETE',
+        headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: ''
+    };
+
+		const newTodos = todos.filter(todo => todo !== selectedTodo)
+    fetch(url + `/todo/${selectedTodo.id}`, requestOptions)
+        .then(response => console.log(response));
+
+		setTodos(newTodos);
+	};
 
 	return (
 		<div className="container">
@@ -94,8 +124,12 @@ function App() {
 							<div className="card px-3">
 								<div className="card-body">
 									<h4 className="card-title">Awesome Todo list</h4>
-									<TodoList todos={todos} toggleTodo={toggleTodo} />
 									<AddTodoForm addTodo={addTodo} />
+									<TodoList
+										todos={todos}
+										toggleTodo={toggleTodo}
+										deleteTodo={deleteTodo}
+									/>
 								</div>
 							</div>
 						</div>

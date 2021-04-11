@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 // @CrossOrigin(origins = "http://marcpartensky.com")
 @Controller
+@CrossOrigin(origins = "*")
 @RequestMapping(path="/todo")
 public class MainController {
   @Autowired

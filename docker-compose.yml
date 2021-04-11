@@ -2,33 +2,59 @@ version: "3.9"
 
 networks:
   spring-api:
+  nginx:
 
 services:
 
-  # react:
-  #   image: 
+  # nginx:
+  #   image: nginx:latest
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./nginx:/etc/nginx/conf.d
+  #     - ./letsencrypt:/etc/letsencrypt
+  #     - /var/log/nginx:/var/log/nginx
+  #   command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   networks:
+  #     - nginx
+
+  react:
+    image: marcpartensky/je-todoapp-react
+    restart: unless-stopped
+    build:
+      context: ./react
+      dockerfile: ./react/Dockerfile
+    environment:
+      - HOST=0.0.0.0
+      - PORT=80
+      - SPRING_API_URL=http://localhost:8080 # not suitable for production
+    ports:
+      - "80:80"
 
   spring-api:
     image: marcpartensky/je-todoapp-spring-api
-    # ports:
-    #   - "5432:5432"
+    restart: unless-stopped
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./spring-api
+      dockerfile: ./spring-api/Dockerfile
+    ports:
+      - "8080:8080"
     env_file:
-      - ./secrets/spring-api.env
+      - ./spring-api/secrets/spring-api.env
     networks:
       - spring-api
 
-  db: # would be better
-    image: postgres
+  db:
+    image: postgres:latest
     restart: unless-stopped
     # ports:
     #   - "5432:5432"
     volumes:
       - ./volumes/postgres/dump:/srv/postgresql/dump
     env_file:
-      - ./secrets/postgres.env
+      - ./spring-api/secrets/postgres.env
     networks:
       - spring-api
 

@@ -1,9 +1,7 @@
 FROM node:latest
 
-COPY . /app
-WORKDIR /app
+RUN npm i -g serve
 
-RUN yarn install
-RUN yarn build
+COPY /build /build
 
-ENTRYPOINT ["yarn", "start"]
+ENTRYPOINT ["serve", "-s", "build"]

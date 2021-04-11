@@ -20,17 +20,18 @@ export const AddTodoForm: React.FC<Props> = ({ addTodo }) => {
 						setText(e.target.value);
 					}}
 				>
-					<button
-						className="add btn btn-primary font-weight-bold todo-list-add-btn"
-						type="submit" onClick={e => {
-							e.preventDefault();
-							addTodo(text);
-							setText('');
-						}}
-					>
-						Add Todo
-					</button>
 				</input>
+
+				<button
+					className="add btn btn-primary font-weight-bold todo-list-add-btn"
+					type="submit" onClick={e => {
+						e.preventDefault();
+						addTodo(text);
+						setText('');
+					}}
+				>
+					Add Todo
+				</button>
 			</form>
 		</div>
 	);

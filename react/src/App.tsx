@@ -1,16 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TodoList } from './TodoList';
 import { AddTodoForm } from './AddTodoForm';
 
-const url = process.env.SPRING_API_URL || "marcpartensky.com:8080";
 
-const initialTodos: Todo[] = [];
-fetch(url)
-	.then((response) => response.json())
-	.then((data) => {
-		initialTodos.push(...data);
-});
+import url from './config';
 
 // import 'express';
 // var app = express();
@@ -20,9 +14,31 @@ fetch(url)
 //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 //   next();
 // });
+const initialTodos: Todo[] = [];
+
+// function fetchTodos(todos: Todo[], setTodos) {
+// 	fetch(url + "/todo/all")
+// 		.then((response) => response.json())
+// 		.then((data) => {
+// 			setTodos([...todos, ...data]);
+// 			// initialTodos.concat(data);
+// 			// initialTodos.push(...data);
+// 			// console.log(initialTodos);
+// 	});
+// }
 
 function App() {
 	const [todos, setTodos] = useState(initialTodos);
+	useEffect(() => {
+		fetch(url + "/todo/all")
+			.then((response) => response.json())
+			.then((data) => {
+				setTodos([...todos, ...data]);
+				// initialTodos.concat(data);
+				// initialTodos.push(...data);
+				// console.log(initialTodos);
+		});
+	}, []);
 
 
 	const toggleTodo = (selectedTodo: Todo) => {
@@ -39,8 +55,22 @@ function App() {
 	};
 
 	const addTodo: AddTodo = (content: string) => {
-		const newTodo = { content, done: false };
-		setTodos([...todos, newTodo]);
+		const newTodo = { content: content, done: false };
+		console.log(newTodo);
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(newTodo)
+    };
+
+    fetch(url + "/todo/add", requestOptions)
+        .then(response => response.json())
+				.then(function (data: Todo[]) {
+					console.log(data);
+					setTodos([...todos, newTodo]);
+				}.bind(todos));
+
 	}
 
 	return (

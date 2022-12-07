@@ -19,20 +19,20 @@ services:
   #   networks:
   #     - nginx
 
-  react:
+  front:
     image: marcpartensky/je-todoapp-react
     restart: unless-stopped
     build:
       context: ./react
       dockerfile: ./react/Dockerfile
     environment:
-      - HOST=0.0.0.0
-      - PORT=80
-      - SPRING_API_URL=http://localhost:8080 # not suitable for production
+      HOST: 0.0.0.0
+      PORT: 80
+      SPRING_API_URL: http://localhost:8080 # not suitable for production
     ports:
       - "80:80"
 
-  spring-api:
+  back:
     image: marcpartensky/je-todoapp-spring-api
     restart: unless-stopped
     build:
@@ -45,8 +45,8 @@ services:
     networks:
       - spring-api
 
-  db:
-    image: postgres:latest
+  postgres:
+    image: postgres:14
     restart: unless-stopped
     # ports:
     #   - "5432:5432"

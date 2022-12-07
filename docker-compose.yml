@@ -1,24 +1,9 @@
 version: "3.9"
 
 networks:
-  spring-api:
-  nginx:
+  todolist:
 
 services:
-  # nginx:
-  #   image: nginx:latest
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./nginx:/etc/nginx/conf.d
-  #     - ./letsencrypt:/etc/letsencrypt
-  #     - /var/log/nginx:/var/log/nginx
-  #   command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   networks:
-  #     - nginx
-
   front:
     image: marcpartensky/je-todoapp-react
     restart: unless-stopped
@@ -41,9 +26,9 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - ./spring-api/secrets/spring-api.env
+      - .env
     networks:
-      - spring-api
+      - todolist
 
   postgres:
     image: postgres:14
@@ -53,16 +38,6 @@ services:
     volumes:
       - ./volumes/postgres/dump:/srv/postgresql/dump
     env_file:
-      - ./spring-api/secrets/postgres.env
+      - .env
     networks:
-      - spring-api
-
-  # db:
-  #   image: mysql
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3306:3306"
-  #   volumes:
-  #     - ./volumes/mysql/dump:/srv/mysql/dump
-  #   env_file:
-  #     - mysql.env
+      - todolist

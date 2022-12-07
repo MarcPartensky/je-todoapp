@@ -15,7 +15,7 @@ services:
       PORT: 80
       SPRING_API_URL: http://localhost:8080 # not suitable for production
     ports:
-      - "80:80"
+      - "3000:80"
 
   back:
     image: marcpartensky/je-todoapp-spring-api
